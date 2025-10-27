@@ -1,12 +1,53 @@
+
+# Segundo passo: Existe a possibilidade do usuario colocar no lugar de peso uma string ao invés de float
+# Tratamento de exceção
+
+try:
+
+# Primeira coisa a se fazer : Declaração de Variável
+# entrada de dados
+
+    nome = input("Informe o nome: ").strip().title()
+    peso = float(input("Informe o peso em kg: ").strip().replace(",","."))
+    altura = float(input("Informe a altura em metros: ").strip().replace(",","."))
+
+
+
+# Terceiro passo: Cálculo do IMC
+    imc = peso/(altura**2)
+
+# Quarto passo: exibe o imc do usuário
+    print(f"{nome}, seu IMC é {imc:.2f}")
+
+# Quinto passo: 
+    if imc < 18.5:
+        print(f"{nome} está abaixo do peso")
+    elif imc < 25:
+        print(f"{nome} está no peso ideal.")
+    elif imc < 30:
+        print(f"{nome} está acima do peso.")
+    elif imc < 35:
+        print(f"{nome} está obeso.")
+    elif imc < 40:
+        print(f"{nome} está com obesidade nível II.")
+    else:
+        print(f"{nome} está com obesidade mórbida.")
+
+
+# Segundo passo: Existe a possibilidade do usuario colocar no lugar de peso uma string ao invés de float
+# tratamento de exceção
+except Exception as e:
+    print(f"Deu ruim! {e}")
+
 # TODO: atividade
 """
 Crie um programa que receba do usuário o nome, peso (em kg) e altura (em metros), calcule o IMC do usuário (arredondado para 2 casas decimais), e exiba o diagnóstico do usuário com base na tabela do IMC.
 """
 
-import os
+''' import os
 import time 
 
-nome = input("Digite seu nome: ")
+nome = input("Digite seu nome: ") 
 peso = float(input("Digite seu peso em kg: ").strip().replace(",","."))
 altura = float(input("Digite sua altura em metros: ").strip().replace(",","."))
 
@@ -32,3 +73,4 @@ else:
 # mensagem de despedida
 time.sleep(3)
 print("\nPrograma finalizado. Volte sempre!")
+'''
