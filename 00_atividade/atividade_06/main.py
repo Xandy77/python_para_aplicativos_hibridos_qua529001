@@ -1,5 +1,25 @@
 # TODO: atividade
 
+import os
+
+# declaração de dicionário
+usuario = {}
+
+# entrada de dados
+usuario['nome'] = input("Informe o nome: ").strip().title()
+usuario['email'] = input("Informe o email: ").strip().lower()
+usuario['telefone'] = input("Informe o telefone: ").strip()
+usuario['cpf'] = input("Informe o cpf: ").strip()
+usuario['genero'] = input("Informe o gênero: ").strip()
+
+os.system("cls")
+
+# saída de dados
+for chave in usuario:
+    print(f"{chave.capitalize()}: {usuario[chave]}\n")
+
+
+
 '''
 Crie um rpograma que receba do usuário os seguinte dados:
 
@@ -11,7 +31,8 @@ Crie um rpograma que receba do usuário os seguinte dados:
 
 Após isso, o programa deve armazenar esses dados em um dicionário e exibir os dados desse dicionário na tela.
 
-'''
+
+
 import os
 # declaração 
 usuario = {
@@ -28,3 +49,4 @@ os.system("cls")
 print("Dados do usuário: ")
 for chave, valor in usuario.items():
     print(f"\n{chave.capitalize()}: {valor}")
+'''
