@@ -36,7 +36,7 @@ def main():
         print("5 - Sair do programa")
 
         opcao = input("Opção desejada: ").strip()
-        limpar
+        limpar()
 
         match opcao:
             case "1":
@@ -51,9 +51,11 @@ def main():
                 empresa.email = input("Informe o e-mail da empresa: ").strip().lower()
                 empresa.telefone = input("Informe o telefone da empresa: ").strip()
             case "3":
-                pass
+                usuario.exibir_dados()
+                continue
             case "4":
-                pass
+                empresa.exibir_dados()
+                continue
             case "5":
                 limpar()
                 print("Programa encerrado.")
