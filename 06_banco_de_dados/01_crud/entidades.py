@@ -24,11 +24,13 @@ def criar_tb_pessoa(engine, Base):
 
 
 
+
+
 # Entidades: Uma tabela no banco de dados é uma entidade, a tabela é dividida entre colunas e linhas. Cada uma dessas entidades possui atributos.
 # Atributos definem a Entidade. O arquivo entidade é onde define as classes.
 # Classes é uma representação de uma entidade.
 # Crud é o nome do sistema mais basico que existe no Banco de Dados. Creat Read Update Delete = crud
 # SQ light = ele usa a própria aplicação.
 # Apasta datebase é aonde irá ficar armazenado o banco de dados.
-# Persistência de dados: os dados não se perdem, usar a biblioteca sqlalchem 
+# Persistência de dados: são dados que  não se perdem quando se fecha a aplicação, usar a biblioteca sqlalchem 
 # O que uma classe e uma entidade tem em comum: atributos.
