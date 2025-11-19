@@ -3,7 +3,7 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import declarative_base, sessionmaker # cria uma sessão para realizar operações inserir, atualizar, deletar) no banco de dados
 
 from entidades import criar_tb_pessoa
-from modulo import limpar, cadastrar
+from modulo import limpar, cadastrar, listar
 
 # cria a main ()
 def main():
@@ -15,16 +15,21 @@ def main():
 
     limpar()
     while True:
-        print(f"{'-'*20} 🐍CRUD DA COBRA🐍{'-'*20}\n")
+        print(f"{'-'*20} 🐍 CRUD DA COBRA 🐍{'-'*20}\n")
         print("0 - Sair do programa")
         print("1 - Cadastrar nova pessoa: ")
+        print("2 - Listar pessoa: ")
         opcao = input("Opção desejada: ")
+        limpar()
         match opcao:
             case "0":
                 print("Programa encerrado.")
                 break
             case "1":
                 print(cadastrar(session, Pessoa))
+                continue
+            case "2":
+                listar(session, Pessoa)
                 continue
             case _:
                 print("Opção inválida.")

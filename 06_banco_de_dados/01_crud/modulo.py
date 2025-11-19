@@ -32,3 +32,101 @@ def cadastrar(session, Pessoa):
 
     except Exception as e:
         print(f"Não foi possível cadastrar. {e}.")
+
+# read
+def listar(session, Pessoa):
+    try:
+        pessoas = session.query(Pessoa).all()
+
+        print("Pessoas cadastradas:\n")
+        for pessoa in pessoas:
+            print(f"ID: {pessoa.id_pessoa}")
+            print(f"Nome: {pessoa.nome}")
+            print(f"E-mail: {pessoa.email}")
+            print(f"Gênero: {pessoa.genero}")
+            print(f"Data de Nascimento: {pessoa.nascimento.strftime("%d/%m/%Y")}")
+            print(f"\n{'-'*40}\n")
+
+    except Exception as e:
+        print(f"Não foi possível listar. {e}") 
+
+# update
+def atualizar(session, Pessoa):
+    id_pesssoa = "" # recebe vazio
+    email = "" # recebe vazio
+    novo_nome = ""
+    novo_email = ""
+    novo_nascimento = ""
+    novo_genero = ""
+
+    try:
+        print("Escolha o campo que deseja pesquisar: ")
+        print("1 - ID")
+        print("2 - E-mail")
+        print("3 - Retornar")
+        opcao = input(f"Opção desejada: ").strip()
+        limpar()
+
+        match opcao:
+            case "1":
+                id_pesssoa = input("Informe o ID: ").strip()
+                pessoa = session.query(Pessoa).filter_by(id_pesssoa).first() # Não tem continue, poi continue só tem quando tem laço de repetição
+            case "2":
+                email = input("Informe o e-mail: ").strip().lower()
+                pessoa = session.query(Pessoa).filter_by(email=email).first()
+            case "3":
+                return ""
+            case _:
+                return "Opção inválida."
+            
+        if pessoa:
+            limpar()
+            while True: # laço de repetição
+                # menu
+                print(f"ID {pessoa.id_pessoa}")
+                print("Qual campo deseja alterar:\n")
+                print(f"1 - Nome: {pessoa.nome}")
+                print(f"1 - E-mail: {pessoa.email}")
+                print(f"1 - Data de nascimento: ("{pessoa.nascimento.strftime(%d/%m/%Y)}")
+                print(f"1 - Gênero: {pessoa.genero}")
+                print(f"5 - Finalizar")
+                campo = input("Campo desejado: ").strip()
+                limpar()
+
+                match campo:
+                    case "1":
+                        novo_nome = input("Informe o novo nome: ").strip().title()
+                        continue
+                    case "2":
+                        novo_email = input("Informe o novo e-mail: ").strip().lower()
+                        pessoas = session.query(Pessoa).filter(Pessoa.email==novo_email).all()
+                        if email in [pessoa.email for pessoa in pessoas]:
+                            print("E-mail já cadastrado: ")
+                        continue
+                    case "3":
+                        novo_nascimento = input("Informe a nova data de nascimento (dd/mm/aaaa): ").strip()
+                        continue
+                    case "4":
+                        novo_genero = input("Informe o novo gênero: ").strip().lower()
+                        continue
+                    case "5":
+                        novo_nome = novo_nome if novo_nome != "" else pessoa.nome
+                        novo_email = novo_email if novo_email != "" else pessoa.emal
+                        novo_nascimento = datetime.strptime(novo_nascimento,("%d/%m/%Y").date() if novo_nascimento != "" else pessoa.nascimento)
+                        novo_genero = novo_genero if novo_genero != "" else pessoa.genero 
+                        break
+                    case _:
+                        print("Campo inexistente.")
+                        continue
+            pessoa.nome = novo_nome
+            pessoa.email = novo_email
+            pessoa.nascimento = novo_nascimento
+            pessoa.genero = novo_genero
+
+            session.commit()
+
+            return "Dados atualizados com sucesso."
+        else:
+            return "Pessoa não encontrada."
+    except Exception as e:
+        print(f"Não foi possível alterar os dados. {e}.")

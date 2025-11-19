@@ -23,9 +23,6 @@ def criar_tb_pessoa(engine, Base):
 
 
 
-
-
-
 # Entidades: Uma tabela no banco de dados é uma entidade, a tabela é dividida entre colunas e linhas. Cada uma dessas entidades possui atributos.
 # Atributos definem a Entidade. O arquivo entidade é onde define as classes.
 # Classes é uma representação de uma entidade.
