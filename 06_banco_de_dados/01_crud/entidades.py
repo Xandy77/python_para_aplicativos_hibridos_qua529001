@@ -16,8 +16,8 @@ def criar_tb_pessoa(engine, Base):
             genero = Column(String, nullable=True) # nullable não é unico, então não é obrigatório informar
 
         Base.metadata.create_all(engine)
-
         return Pessoa
+    
     except Exception as e:
         print(f"Não foi possível conectar com o banco de dados. {e}.")
 
