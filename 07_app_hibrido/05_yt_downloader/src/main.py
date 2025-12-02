@@ -16,8 +16,8 @@ def main(page: ft.Page):
     os.makedirs(caminho_audios, exist_ok=True)
 
     # componentes da interface gráfica
-    titulo = ft.Text("Use uma URL", color=ft.Colors.Black, size=20, weight=ft.Fontweight.BOLD)
-    URL = ft.TextField(
+    titulo = ft.Text("Use uma URL", color=ft.Colors.Black, size=20, weight=ft.FontWeight.BOLD)
+    url = ft.TextField(
         label="Cole a URL do video do YouTube aqui",
         width=400,
         border_radius=10
@@ -45,6 +45,14 @@ def main(page: ft.Page):
         bgcolor=ft.Colors.BLUE_GREY_100
     )
 
+     # texto de status
+    status_text = ft.Text(
+        "",
+        color=ft.Colors.BLACK,
+        size=14,
+        text_align=ft.TextAlign.CENTER
+    )
+
     # mmostra as informações de video na interface
     def mostrar_info_videos(yt):
         try:
@@ -62,7 +70,7 @@ def main(page: ft.Page):
                 ]
             )
 
-            video_info_visible = True
+            video_info.visible = True
             page.update()
 
         except Exception as e:
@@ -99,6 +107,20 @@ def main(page: ft.Page):
                 stream = yt.streams.get_highest_resolution()
 
                 # TODO: fazer if else do stream
+                if stream:
+                    stream.download(caminho_videos)
+
+                    # sucesso
+                    progress_bar.visible = False
+                    status_text.value = "Download concluído com sucesso."
+                    status_text.color = ft.Colors.GREEN
+                    page.update()
+                else:
+                    progress_bar.visible = False
+                    status_text.value = "Não foi possível baixar o video."
+                    status_text.color = ft.Colors.RED
+                    page.update()
+
             except Exception as e:
                 progress_bar.visible = False
                 status_text.value = f"Erro {str(e)}."
@@ -107,15 +129,123 @@ def main(page: ft.Page):
 
         # executa em thread separada para não travar a interface
         threading.Thread(target=downloade_thread, daemon=True).start()
-    
-    page.add(
-        ft.SafeArea(
-            ft.Container(
-                
-                alignment=ft.alignment.center,
-            ),
-            expand=True,
+
+    # extrair o audio do video
+    def extrair_audio(e):
+        if not url.value.strip():
+            status_text.value = "Favor inserir uma URL."
+            status_text.color = ft.Colors.ORANGE
+            page.update()
+
+        def download_thread():
+            try:
+                progress_bar.visible = True
+                status_text.value = "Analisando video..."
+                status_text.color = ft.Colors.BLUE
+                page.update()
+
+                # cria objetos do youtube
+                yt = YouTube(url.value.strip())
+
+                # mostra informações do video
+                mostrar_info_videos(yt)
+
+                # inici download do audio
+                status_text.value = f"Extraindo audio de {yt.title}..."
+                page.update()
+
+                stream = yt.streams.filter(only_audio=True).first()
+                if stream:
+                    audio_file = stream.download(caminho_audios)
+
+                    # renomeia para Mp3
+                    base, extens = os.path.splitext(audio_file)
+                    novo_audio = base + ".mp3"
+                    os.rename(audio_file, novo_audio)
+
+                    # sucesso
+                    progress_bar.visible = False
+                    status_text.value = f"Audio salvo como {os.path.basename(novo_audio)}"
+                    status_text.color = ft.Colors.GREEN
+                    page.update()
+
+                else:
+                    progress_bar.visible = False
+                    status_text.value = "Não foi possível baixar o aúdio."
+                    status_text.color = ft.Colors.RED
+                    page.update()
+                    
+            except Exception as e:
+                progress_bar.visible = False
+                status_text.value = f"Error: {str(e)}."
+                status_text.color = ft.Colors.RED
+                page.update()
+
+        # executa em thread separada para não travar a interface
+        threading.Thread(target=download_thread, daemon=True).start()
+
+        # limpa campos e reinicia a interface
+        def limpar_campos(e):
+            url.value = ""
+            video_info.invible = False
+            progress_bar.visible = False
+            status_text.value = ""
+            page.update()
+
+    # interface
+    video_btn = ft.ElevatedButton(
+        text="Baixar video",
+        width=150,
+        on_click=baixar_video,
+        style=ft.ButtonStyle(
+            bgcolor=ft.Colors.BLUE,
+            color=ft.Colors.WHITE,
+            elevation=3,
+            text_style=ft.TextStyle(size=18)
+        )
+    )   
+    # interface
+    audio_btn = ft.ElevatedButton(
+        text="Baixar aúdio",
+        width=150,
+        on_click=baixar_video,
+        style=ft.ButtonStyle(
+            bgcolor=ft.Colors.GREEN,
+            color=ft.Colors.WHITE,
+            elevation=3,
+            text_style=ft.TextStyle(size=18)
         )
     )
+    clear_btn = ft.IconButton(
+        on_click=limpar_campos,
+        style=ft.ButtonStyle(
+            bgcolor=ft.Colors.GREY,
+            color=ft.Colors.WHITE,
+            elevation=1
+        )
+    )
+    linha_url = ft.Row(
+        [url, clear_btn],
+        spacing=10,
+        alignment=ft.MainAxisAlignment.CENTER,
+        vertical_alignment=ft.CrossAxisAlignment.CENTER
+    )
+
+    botoes = ft.Row(
+        [video_btn, audio_btn],
+        spacing=15,
+        alignment=ft.MainAxisAlignment.CENTER,
+        vertical_alignment=ft.CrossAxisAlignment.CENTER
+    )   
+    
+    page.add(
+    ft.SafeArea(
+        ft.Container(
+                
+            alignment=ft.alignment.center,
+        ),
+        expand=True,
+    )
+)
 
 ft.app(main)
