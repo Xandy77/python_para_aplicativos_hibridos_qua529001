@@ -16,7 +16,7 @@ def main(page: ft.Page):
     os.makedirs(caminho_audios, exist_ok=True)
 
     # componentes da interface gráfica
-    titulo = ft.Text("Use uma URL", color=ft.Colors.Black, size=20, weight=ft.FontWeight.BOLD)
+    titulo = ft.Text("Use uma URL", color=ft.Colors.BLACK, size=20, weight=ft.FontWeight.BOLD)
     url = ft.TextField(
         label="Cole a URL do video do YouTube aqui",
         width=400,
@@ -53,7 +53,7 @@ def main(page: ft.Page):
         text_align=ft.TextAlign.CENTER
     )
 
-    # mmostra as informações de video na interface
+    # mostra as informações de video na interface
     def mostrar_info_videos(yt):
         try:
             # limpa o container
@@ -89,7 +89,7 @@ def main(page: ft.Page):
             try:
                 # mostra progresso
                 progress_bar.visible = True
-                progress_bar.value = "Analisando video..."
+                status_text.value = "Analisando video..."
                 status_text.color = ft.Colors.BLUE
                 page.update()
 
@@ -184,13 +184,13 @@ def main(page: ft.Page):
         # executa em thread separada para não travar a interface
         threading.Thread(target=download_thread, daemon=True).start()
 
-        # limpa campos e reinicia a interface
-        def limpar_campos(e):
-            url.value = ""
-            video_info.invible = False
-            progress_bar.visible = False
-            status_text.value = ""
-            page.update()
+    # limpa campos e reinicia a interface
+    def limpar_campos(e):
+        url.value = ""
+        video_info.visible = False
+        progress_bar.visible = False
+        status_text.value = ""
+        page.update()
 
     # interface
     video_btn = ft.ElevatedButton(
@@ -208,7 +208,7 @@ def main(page: ft.Page):
     audio_btn = ft.ElevatedButton(
         text="Baixar aúdio",
         width=150,
-        on_click=baixar_video,
+        on_click=extrair_audio,
         style=ft.ButtonStyle(
             bgcolor=ft.Colors.GREEN,
             color=ft.Colors.WHITE,
@@ -217,6 +217,7 @@ def main(page: ft.Page):
         )
     )
     clear_btn = ft.IconButton(
+        ft.Icons.CAR_CRASH,
         on_click=limpar_campos,
         style=ft.ButtonStyle(
             bgcolor=ft.Colors.GREY,
@@ -236,16 +237,22 @@ def main(page: ft.Page):
         spacing=15,
         alignment=ft.MainAxisAlignment.CENTER,
         vertical_alignment=ft.CrossAxisAlignment.CENTER
-    )   
+    )
     
     page.add(
-    ft.SafeArea(
-        ft.Container(
-                
-            alignment=ft.alignment.center,
-        ),
-        expand=True,
+        ft.Column(
+            [
+                logo_cabecalho, linha_url, 
+                ft.Divider(height=0, color=ft.Colors.TRANSPARENT), # ESPAÇAMENTO MAIOR ENTRE OS ELEMENTOS
+                video_info, botoes,
+                ft.Divider(height=10, color=ft.Colors.TRANSPARENT),
+                progress_bar, status_text
+            ],
+            spacing=15,
+            alignment=ft.CrossAxisAlignment.CENTER,
+            horizontal_alignment=ft.CrossAxisAlignment.CENTER,
+            scroll=ft.ScrollMode.AUTO
+        )
     )
-)
 
 ft.app(main)
