@@ -12,7 +12,7 @@ class Task(ft.Container):
         self.checkbox = ft.Checkbox(value=False, on_change=self.update_status)
 
         # Texto da tarefa
-        self.label = ft.Text(text, size=16, selectable=True)
+        self.label = ft.Text(text, size=16, selectable=True, color="#000000")
 
         # Botão deletar
         self.delete_btn = ft.IconButton(icon=ft.Icons.DELETE_OUTLINE, icon_color="red", on_click=self.delete_clicked)
@@ -21,12 +21,21 @@ class Task(ft.Container):
         self.edit_btn = ft.IconButton(icon=ft.Icons.EDIT, icon_color="#0288D1", on_click=self.edit_task)
 
         # Row da tarefa
+        # Row da tarefa
         self.row = ft.Row(
-            [self.checkbox, self.label, self.edit_btn, self.delete_btn],
-            alignment=ft.MainAxisAlignment.SPACE_BETWEEN,
+            controls=[
+                self.checkbox,
+                self.label,
+                ft.Row(
+                    controls=[self.edit_btn, self.delete_btn],
+                    spacing=5,
+                )
+            ],
+            alignment=ft.MainAxisAlignment.START,
             vertical_alignment=ft.CrossAxisAlignment.CENTER,
-            spacing=10
+            spacing=8
         )
+
 
         super().__init__(
             content=self.row,
@@ -51,7 +60,8 @@ class Task(ft.Container):
             value=self.label.value,
             expand=True,
             on_submit=self.save_edit,
-            autofocus=True
+            autofocus=True, 
+            color="#000000"
         )
         self.row.controls[1] = self.input_edit
         self.update()
@@ -73,6 +83,8 @@ class TodoApp(ft.Column):
             expand=True,
             border_radius=10,
             on_submit=self.add_clicked,
+            color="#000000", # texto digitado
+            hint_style=ft.TextStyle(color="#555555") # texto de dica
         )
 
         self.items_left = ft.Text("0 itens ativos", size=14, color="#263238")
@@ -87,7 +99,15 @@ class TodoApp(ft.Column):
                 ft.Tab(text="Concluídas"),
             ],
             on_change=self.update_filter,
+
+            # CORES COMPATÍVEIS COM A SUA VERSÃO DO FLET
+            indicator_color="#263238",
+            overlay_color="#26323820",
+            label_color="#263238",              # Cor das labels da aba selecionada
+            unselected_label_color="#26323899", # Cor da aba não selecionada (um pouco mais clara)
         )
+
+
 
         # Layout geral com tom sobre tom
         self.controls = [
